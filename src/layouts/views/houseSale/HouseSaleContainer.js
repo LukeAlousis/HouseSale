@@ -6,12 +6,12 @@ import { drizzleConnect } from 'drizzle-react'
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    ComplexStorage: state.contracts.HouseSale,
+    HouseSale: state.contracts.HouseSale,
     drizzleStatus: state.drizzleStatus,
     web3: state.web3,
     transactionStack: state.transactionStack,
     transactions: state.transactions,
-    contracts: state.contracts
+    contracts: state.contracts,
   }
 }
 
