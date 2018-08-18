@@ -16,6 +16,8 @@ import App from './App'
 import HomeContainer from './layouts/views/home/HomeContainer'
 import Transactions from './layouts/views/transactions/TransactionsContainer'
 import LotteryContainer from './layouts/views/Lottery/LotteryContainer'
+import HouseSaleContainer from './layouts/views/houseSale/HouseSaleContainer'
+
 
 import { LoadingContainer } from 'drizzle-react-components'
 
@@ -35,7 +37,7 @@ ReactDOM.render((
       <LoadingContainer>
         <Router history={history}>
           <Route path="/" component={App}>
-            <IndexRoute component={LotteryContainer} />
+            <IndexRoute component={HouseSaleContainer} />
             <Route exact path="/reports" component={Transactions}/>
           </Route>
         </Router>

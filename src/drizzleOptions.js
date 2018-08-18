@@ -13,6 +13,8 @@ import the Migrations.sol contract
 */
 import ComplexStorage from './../build/contracts/ComplexStorage.json'
 import Lottery from './../build/contracts/Lottery.json'
+import HouseSale from './../build/contracts/HouseSale.json'
+
 
 
 //this is where we store the instantiations, in 'options'
@@ -26,7 +28,8 @@ const drizzleOptions = {
   },
   contracts: [
     ComplexStorage,
-    Lottery
+    Lottery,
+    HouseSale
   ],
   polls: {
     accounts: 1500

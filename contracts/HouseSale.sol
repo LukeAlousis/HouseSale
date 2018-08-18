@@ -20,7 +20,7 @@ contract HouseSale is Ownable {
     address seller;
     uint houseId;
     uint offerNum;
-    uint housesForSale;
+    uint public housesForSale;
 
 
     //Create a struct of the house that will be mapped by an Id

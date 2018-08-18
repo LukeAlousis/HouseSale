@@ -16,92 +16,31 @@ class HouseSale extends Component {
     this.contracts = context.drizzle.contracts
 
     this.state = {
-      manager: '',
-      players: [],
-      balance: '',
-      value: '',
-      message: ''
+      housesForSale: ''
     };
   }
 
   async componentDidMount() {
-    const manager = await this.contracts.HouseSale.methods.manager().call();
-    const players = await this.contracts.HouseSale.methods.getPlayers().call();
-    const balance = await this.context.drizzle.web3.eth.getBalance(this.contracts.HouseSale.options.address);
+    const housesForSale = await this.contracts.HouseSale.methods.housesForSale().call();
 
-    this.setState({ manager, players, balance });
+    this.setState({ housesForSale });
   }
-  onSubmit = async (event) => {
-    event.preventDefault();
 
-    this.setState({ message: 'Waiting on transaction success...' });
 
-    await this.contracts.HouseSale.methods.enter().send({
-      from: this.props.accounts[0],
-      value: this.context.drizzle.web3.utils.toWei(this.state.value, 'ether')
-    });
-
-    this.setState({ message: 'You have been entered!' });
-  };
-
-  onClick = async () => {
-
-    this.setState({ message: 'Waiting on transaction sucess'});
-
-    await this.contracts.HouseSale.methods.pickWinner().send({
-      from: this.props.accounts[0],
-    });
-    this.setState({ message: 'A winner has been picked!' });
-
-  };
 
   render() {
     return (
       <div>
         <h2>HouseSale Contract</h2>
         <p>
-          This contract is managed by {this.state.manager}.
-          There are currently {this.state.players.length} people entered,
-          competing to win {this.context.drizzle.web3.utils.fromWei(this.state.balance, 'ether')} ether!
+          There are currently {this.state.housesForSale} houses for sale,
 
         </p>
+        <h3>Add House For Sale</h3>
+            <ContractForm contract="HouseSale" method="addHouseForSale" labels={['House Address', 'Price', 'Deposit Fee']} />
+            <br/><br/>
 
         <hr />
-
-        <form onSubmit={this.onSubmit}>
-          <h4>Want to try your luck?</h4>
-          <div>
-            <label> Amount of ether to enter</label>
-            <input
-              value={this.state.value}
-              onChange={event => this.setState({ value: event.target.value })}
-            />
-          </div>
-          <button>Enter</button>
-
-        </form>
-
-        <hr />
-
-        <h3>{this.state.message}</h3>
-
-        <hr />
-
-        <h4>Ready to pick a winner?</h4>
-        <button onClick={this.onClick}>Pick a winner!</button>
-
-        <hr />
-
-        {/* Below not working with metamask
-        <p> Or using contract form... To enter the HouseSale the user must submit 1 ether</p>
-        <ContractForm contract="HouseSale" method="enter"  sendArgs={{ value: '1000000000000000000'}}/>
-        <br/><br/>
-        */}
-
-        <hr />
-        <p> Time to pick winner </p>
-        <ContractForm contract="HouseSale" method="pickWinner"/>
-        <br/><br/>
 
       </div>
 
