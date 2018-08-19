@@ -171,8 +171,6 @@ contract HouseSale is Ownable {
         offers.push(newOffer);
         offersMade[msg.sender]++;
 
-
-
     }
 
 
