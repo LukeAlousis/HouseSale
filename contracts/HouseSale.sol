@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 /* @dev Import openZepplin libraries
 */
-import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/lifecycle/Pausable.sol';
 import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
 
@@ -13,14 +13,15 @@ import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
     transfer of funds once the deal has been closed.
     */
 
-contract HouseSale is Ownable {
+contract HouseSale is Pausable {
 
     using SafeMath for uint;
 
     address seller;
     uint houseId;
     uint offerNum;
-    uint public housesForSale;
+    uint housesForSale;
+    uint readyToClose;
 
 
     //Create a struct of the house that will be mapped by an Id
@@ -65,15 +66,19 @@ contract HouseSale is Ownable {
     //Mappings to keep track of the number of offers, accepted offers or houses
     //a user has
     mapping (address => uint) offersMade;
-    mapping (address => uint) acceptedOffers;
+    //mapping (address => uint) acceptedOffers;
+    mapping (address => uint) offersIAccepted;
     mapping (address => uint) housesByUser;
     mapping (address => uint) sentOffers;
+    mapping (address => uint) offerRequiresFunding;
+
+
 
 
     //Create an enum that tracks the state of the transaction
     enum State {Sold, ForSale, OfferAccepted, ReadyToClose, FailedToClose, Removed}
     enum Funds {DepositMade, FundsRequired, AllFundsSubmitted}
-    enum OfferState {Pending, Accepted, Rejected, Pulled}
+    enum OfferState {Pending, Accepted, ReadyToClose, Pulled, FailedToClose, Complete}
 
     /* @dev Modifier that verifies the msg.sender is the buyer
       * @param _buyer Address of the buyer.
@@ -107,13 +112,13 @@ contract HouseSale is Ownable {
       * @param _price Price the seller wants to sell the house for
       * @param _depositFee Required fee to submit an offer on the house
       */
-    function addHouseForSale(string _address, uint _price) public {
+    function addHouseForSale(string _address, uint _price) public whenNotPaused(){
         Home memory newHome = Home({
             homeAddress: _address,
             id: houseId,
             salePrice: _price,
             offerId: 0,
-            depositFee: 2 ether,
+            depositFee: 5000 wei,
             daysUntilClosing: 0,
             remainingFunds: 0,
             closingDate: 0,
@@ -136,7 +141,7 @@ contract HouseSale is Ownable {
     seller. Can only happen before an offer is accepted.
       * @param _houseId Id of the house for sale
       */
-    function takeDownHouse(uint _houseId) public verifySeller(houses[_houseId].seller) {
+    function takeDownHouse(uint _houseId) public verifySeller(houses[_houseId].seller) whenNotPaused(){
         require(houses[_houseId].state == State.ForSale);
         //delete houses[_houseId]; Cant delete because buyers have to take their deposits still
         houses[_houseId].state = State.Removed;
@@ -152,7 +157,7 @@ contract HouseSale is Ownable {
       * @param _daysUntilClosing Amount of days, once the offer is accepted
       until closing
       */
-    function makeOffer(uint _houseId, uint _offer, uint _daysUntilClosing) public payable {
+    function makeOffer(uint _houseId, uint _offer, uint _daysUntilClosing) public payable whenNotPaused(){
         require(msg.sender != houses[_houseId].seller);
         require(msg.value == houses[_houseId].depositFee);
         require(houses[_houseId].state == State.ForSale);
@@ -186,7 +191,7 @@ contract HouseSale is Ownable {
     Changes the offerState to pulled.
       * @param _offerId Id of the offer
       */
-    function pullOffer(uint _offerId) public verifyBuyer(offers[_offerId].buyer){
+    function pullOffer(uint _offerId) public verifyBuyer(offers[_offerId].buyer) whenNotPaused(){
         require(offers[_offerId].offerState == OfferState.Pending);
         uint _houseId = offers[_offerId].houseId;
         houses[_houseId].numberOfPulledOffers = houses[_houseId].numberOfPulledOffers.add(1);
@@ -222,7 +227,7 @@ contract HouseSale is Ownable {
       * @param _houseId Id of the houe for sale
       * @param _offerId Id of the offer the seller wants to accept
       */
-    function acceptOffer(uint _houseId, uint _offerId) public verifySeller(houses[_houseId].seller) {
+    function acceptOffer(uint _houseId, uint _offerId) public verifySeller(houses[_houseId].seller) whenNotPaused(){
         require(houses[_houseId].state == State.ForSale);
         //require(offers[_offerId].buyer != 0x0000000000000000000000000000000000000000); //Stops seller from accepting if offer has been pulled
         require(offers[_offerId].offerState == OfferState.Pending);
@@ -234,10 +239,15 @@ contract HouseSale is Ownable {
         houses[_houseId].remainingFunds = houses[_houseId].salePrice.sub(houses[_houseId].depositFee);
         //houses[_houseId].closingDate = now + houses[_houseId].daysUntilClosing * 1 seconds;
         houses[_houseId].closingDate = now.add(houses[_houseId].daysUntilClosing.mul(86400 seconds));
-        acceptedOffers[houses[_houseId].buyer]++;
+        //acceptedOffers[houses[_houseId].buyer]++;
+        offersIAccepted[houses[_houseId].seller]++;
+        offerRequiresFunding[houses[_houseId].buyer]++;
+        sentOffers[houses[_houseId].seller]--;
         offers[_offerId].closingDate = houses[_houseId].closingDate;
         offers[_offerId].remainingFunds = houses[_houseId].remainingFunds;
         offers[_offerId].offerState = OfferState.Accepted;
+        housesForSale = housesForSale.sub(1);
+
     }
 
     /*
@@ -249,14 +259,18 @@ contract HouseSale is Ownable {
       * @param _houseId Id of the house
       * @value remaining funds in ether
       */
-    function submitRemainingFunds(uint _houseId) public payable verifyBuyer(houses[_houseId].buyer){
+    function submitRemainingFunds(uint _houseId) public payable verifyBuyer(houses[_houseId].buyer) whenNotPaused(){
         if (now >= houses[_houseId].closingDate) {
+            offerRequiresFunding[houses[_houseId].buyer]--;
             transferDepositToSeller(_houseId);
             msg.sender.transfer(msg.value);
         } else {
             require(msg.value == houses[_houseId].remainingFunds);
             require(houses[_houseId].state == State.OfferAccepted);
+            offerRequiresFunding[houses[_houseId].buyer]--;
             houses[_houseId].state = State.ReadyToClose;
+            readyToClose = readyToClose.add(1);
+            offers[houses[_houseId].offerId].offerState = OfferState.ReadyToClose;
 
         }
 
@@ -267,8 +281,9 @@ contract HouseSale is Ownable {
     buyer has not submitted all remaining funds to the contract
       * @param _houseId Id of the house
       */
-    function transferDepositToSeller(uint _houseId) private {
+    function transferDepositToSeller(uint _houseId) private whenNotPaused(){
         houses[_houseId].state = State.FailedToClose;
+        offers[houses[_houseId].offerId].offerState = OfferState.FailedToClose;
         houses[_houseId].seller.transfer(houses[_houseId].depositFee);
     }
 
@@ -277,12 +292,15 @@ contract HouseSale is Ownable {
     deposit will be sent to the seller.
       * @param _houseId Id of the house
       */
-    function closeDeal(uint _houseId) public {
+    function closeDeal(uint _houseId) public whenNotPaused(){
         require(now >= houses[_houseId].closingDate);
         if (houses[_houseId].state != State.ReadyToClose) {
             transferDepositToSeller(_houseId);
 
         } else {
+            houses[_houseId].state = State.Sold;
+            offers[houses[_houseId].offerId].offerState = OfferState.Complete;
+            readyToClose = readyToClose.sub(1);
             houses[_houseId].seller.transfer(houses[_houseId].salePrice);
 
         }
@@ -305,7 +323,7 @@ contract HouseSale is Ownable {
         uint counter = 0;
         for (uint i = 0; i < houseId; i++) {
             //Checks to see if house has not been taken down
-            if (houses[i].state != State.Removed) {
+            if (houses[i].state == State.ForSale) {
                 result[counter] = i;
                 counter++;
             }
@@ -351,8 +369,10 @@ contract HouseSale is Ownable {
     an offer has been accepted.
       * @return uint[] Array of house Ids that are owned by the seller
       */
+
+
     function getMyAcceptedOffersId() external view returns(uint[]) {
-        uint[] memory result = new uint[](acceptedOffers[msg.sender]);
+        uint[] memory result = new uint[](offerRequiresFunding[msg.sender]);
 
         uint counter = 0;
         for (uint i = 0; i < offerNum; i++) {
@@ -369,6 +389,26 @@ contract HouseSale is Ownable {
         }
         return result;
     }
+
+    function getOffersIAcceptedId() external view returns(uint[]) {
+        uint[] memory result = new uint[](offersIAccepted[msg.sender]);
+
+        uint counter = 0;
+        for (uint i = 0; i < offerNum; i++) {
+            //Checks to see if house has not been taken down
+            if (
+              offers[i].seller == msg.sender
+              && offers[i].offerState == OfferState.Accepted
+              && houses[offers[i].houseId].state == State.OfferAccepted
+
+            ) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+    }
+
     //Function to return all my offers
 
     /* @dev Gets a list of the msg.senders offers by Id
@@ -408,13 +448,34 @@ contract HouseSale is Ownable {
         return result;
     }
 
+    /* @dev Gets a list of the msg.senders houses for sale by Id
+    an offer has been accepted.
+      * @return uint[] Array of house Ids that are owned by the seller
+      */
+    function getReadyToCloseId() external view returns(uint[]) {
+        uint[] memory result = new uint[](readyToClose);
+
+        uint counter = 0;
+        for (uint i = 0; i < houseId; i++) {
+            //Checks to see if house has not been taken down
+            if (houses[i].state == State.ReadyToClose) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+    }
+    //Pending offers that have not been accepted
     function getOffersIdsOnMyHouses() external view returns(uint[]) {
         uint[] memory result = new uint[](sentOffers[msg.sender]);
 
         uint counter = 0;
         for (uint i = 0; i < offerNum; i++) {
             //Checks to see if house has not been taken down
-            if (offers[i].seller == msg.sender) {
+            if (
+              offers[i].seller == msg.sender
+              && offers[i].offerState == OfferState.Pending
+            ) {
                 result[counter] = i;
                 counter++;
             }
