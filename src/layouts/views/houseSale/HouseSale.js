@@ -2,12 +2,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
-import { Card, Container, Grid, Segment } from 'semantic-ui-react'
+import { Card, Container, Grid, Segment, Accordion, Icon, Header } from 'semantic-ui-react'
 
 //resources
   //const sigUtil = require("eth-sig-util")
 //components
-import Header from '../../components/Header'
 import Loadable from 'react-loading-overlay'
 
 class HouseSale extends Component {
@@ -18,7 +17,10 @@ class HouseSale extends Component {
 
     this.state = {
       housesForSale: '',
-      offeredHouseIds: []
+      offeredHouseIds: [],
+      activeIndex: 0,
+      value: '',
+      id: ''
     };
   }
 
@@ -26,36 +28,182 @@ class HouseSale extends Component {
   async componentDidMount() {
     const housesForSale = await this.contracts.HouseSale.methods.housesForSale().call();
     const offeredHouseIds = await this.contracts.HouseSale.methods.getHousesForSale().call();
-    //const summary = await this.contracts.HouseSale.methods.houses('0').call();
-    console.log(offeredHouseIds);
-    let summary;
-    const items = await Promise.all(offeredHouseIds.map(async address => {
-      summary = await this.contracts.HouseSale.methods.houses(address).call();
+    const myHouseIds = await this.contracts.HouseSale.methods.getMyHousesId().call();
+    const myOfferIds = await this.contracts.HouseSale.methods.getMyOffersId().call();
+    const myAcceptedOfferIds = await this.contracts.HouseSale.methods.getMyAcceptedOffersId().call();
+    const offersOnMyHousesIds = await this.contracts.HouseSale.methods.getOffersIdsOnMyHouses().call();
+
+
+
+
+
+    //Get all houses for sale
+    const allHouses = await Promise.all(offeredHouseIds.map(async address => {
+      let summary = await this.contracts.HouseSale.methods.houses(address).call();
       console.log(summary);
+      if (summary[12] == 1) {
+        summary[12] = 'For Sale';
+      } else if (summary[12] == 0) {
+        summary[12] = 'Sold';
+      } else if (summary[12] == 2) {
+        summary[12] = 'Offer Accepted';
+      } else if (summary[12] == 3) {
+        summary[12] = 'Ready to Close';
+      } else if (summary[12] == 4) {
+        summary[12] = 'Failed to Close';
+      }
+
       return {
-        header: summary[0],
-        description: 'HouseId' + address,
-        fluid: true
+        header: 'House Id: ' + address + '  -  ' + summary[0],
+        description: 'House Id: ' + address
+                      + ', Price: ' + this.context.drizzle.web3.utils.fromWei(summary[2], 'ether') + " ether"
+                      + ', State: ' + summary[12]
       }
     }));
 
+    //Get my houses for sale
+    const myHouses = await Promise.all(myHouseIds.map(async address => {
+      let summary = await this.contracts.HouseSale.methods.houses(address).call();
+      console.log(summary);
+      if (summary[12] == 1) {
+        summary[12] = 'For Sale';
+      } else if (summary[12] == 0) {
+        summary[12] = 'Sold';
+      } else if (summary[12] == 2) {
+        summary[12] = 'Offer Accepted';
+      } else if (summary[12] == 3) {
+        summary[12] = 'Ready to Close';
+      } else if (summary[12] == 4) {
+        summary[12] = 'Failed to Close';
+      } else if (summary[12] == 5) {
+        summary[12] = 'Removed';
+      }
 
+      return {
+        header: summary[0],
+        description: 'House Id: ' + address
+                      + ', Price: ' + this.context.drizzle.web3.utils.fromWei(summary[2], 'ether') + " ether"
+                      + ', State: ' + summary[12]
+                      + ', Buyer: ' + summary[10]
+                      + ', Closing Date: ' + new Date(summary[7]*1000)
+      }
+    }));
+    // Get all offers on my houses
+    const offersOnMyHouses = await Promise.all(offersOnMyHousesIds.map(async address => {
+      let summary = await this.contracts.HouseSale.methods.offers(address).call();
+      console.log(summary);
+      if (summary[9] == 1) {
+        summary[9] = 'Accepted';
+      } else if (summary[9] == 0) {
+        summary[9] = 'Submitted';
+      } else if (summary[9] == 2) {
+        summary[9] = 'Rejected';
+      } else if (summary[9] == 3) {
+        summary[9] = 'numberOfPulledOffers';
+      }
+
+      return {
+        header: 'Offer Id: ' + address,
+        description: 'Made on house Id: ' + summary[0]
+                      + ', Offer Price: ' + this.context.drizzle.web3.utils.fromWei(summary[1], 'ether') + " ether"
+                      + ', Days Until Closing: ' + summary[2]
+                      + ', Offer State: ' + summary[9]
+      }
+    }));
+    //List of my offers
+    const myOffers = await Promise.all(myOfferIds.map(async address => {
+      let summary = await this.contracts.HouseSale.methods.offers(address).call();
+      console.log(summary);
+      if (summary[9] == 1) {
+        summary[9] = 'Accepted';
+      } else if (summary[9] == 0) {
+        summary[9] = 'Submitted';
+      } else if (summary[9] == 2) {
+        summary[9] = 'Rejected';
+      } else if (summary[9] == 3) {
+        summary[9] = 'numberOfPulledOffers';
+      }
+
+      return {
+        header: 'Offer Id: ' + address,
+        description: 'Made on house Id: ' + summary[0]
+                      + ', Offer Price: ' + this.context.drizzle.web3.utils.fromWei(summary[1], 'ether') + " ether"
+                      + ', Days until closing: ' + summary[2]
+                      + ', Offer State: ' + summary[9]
+      }
+    }));
+
+    //List of my accepted offers
+    const myAcceptedOffers = await Promise.all(myAcceptedOfferIds.map(async address => {
+      let summary = await this.contracts.HouseSale.methods.offers(address).call();
+      console.log(summary);
+      if (summary[9] == 1) {
+        summary[9] = 'Accepted';
+      } else if (summary[9] == 0) {
+        summary[9] = 'Submitted';
+      } else if (summary[9] == 2) {
+        summary[9] = 'Rejected';
+      } else if (summary[9] == 3) {
+        summary[9] = 'numberOfPulledOffers';
+      }
+
+      return {
+        header: 'Offer Id: ' + address,
+        description: 'Made on house Id: ' + summary[0]
+                      + ', Offer Price: ' + this.context.drizzle.web3.utils.fromWei(summary[1], 'ether') + " ether"
+                      + ', Remaining Balance' + summary[6]
+                      + ', Closing Date: ' + new Date(summary[5]*1000)
+                      + ', Offer State: ' + summary[9]
+      }
+    }));
+
+    //Set the app state
     this.setState({ housesForSale });
     this.setState({ offeredHouseIds });
-    this.setState({ items });
-    console.log(items);
-    console.log(this.contracts.HouseSale.options.address);
+    this.setState({ allHouses });
+    this.setState({ myHouses });
+    this.setState({ myOffers });
+    this.setState({ myAcceptedOffers });
+    this.setState({ offersOnMyHouses });
 
+    console.log(allHouses);
+    console.log(this.contracts.HouseSale.options.address);
 
   }
 
+  //Accordian Settings
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+
+  }
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+    console.log(this.state.id);
+    console.log(this.state.value);
+
+    await this.contracts.HouseSale.methods.submitRemainingFunds(this.state.id).send({
+      from: this.props.accounts[0],
+      value: this.state.value,
+    });
+
+  };
+
+
+  //Add house for sale using ether
+  //MAke offer on a house using ether
+  //Submit remaining funds using ether
 
   render() {
     return (
       <Container>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
 
-        <h2>HouseSale Contract</h2>
+        <h1>HouseSale Contract</h1>
         <h2>Active Account</h2>
         <AccountData accountIndex="0" units="ether" precision="3" />
         <br/><br/>
@@ -63,29 +211,129 @@ class HouseSale extends Component {
           There are currently {this.state.housesForSale} houses for sale,
 
         </p>
-        <Grid columns={2} relaxed>
+        <Accordion fluid styled>
+          <Accordion.Title active={this.state.activeIndex === 0} index={0} onClick={this.handleClick}>
+            <Icon name='dropdown' />
+            All Houses For Sale
+          </Accordion.Title>
+          <Accordion.Content active={this.state.activeIndex === 0}>
+            <Card.Group items={this.state.allHouses} />
+          </Accordion.Content>
+          <Accordion.Title active={this.state.activeIndex === 1} index={1} onClick={this.handleClick}>
+            <Icon name='dropdown' />
+            My Houses For Sale
+          </Accordion.Title>
+          <Accordion.Content active={this.state.activeIndex === 1}>
+            <Card.Group items={this.state.myHouses} />
+          </Accordion.Content>
+          <Accordion.Title active={this.state.activeIndex === 2} index={2} onClick={this.handleClick}>
+            <Icon name='dropdown' />
+            Offers on my Houses
+          </Accordion.Title>
+          <Accordion.Content active={this.state.activeIndex === 2}>
+            <Card.Group items={this.state.offersOnMyHouses} />
+          </Accordion.Content>
+          <Accordion.Title active={this.state.activeIndex === 3} index={3} onClick={this.handleClick}>
+            <Icon name='dropdown' />
+            Offers I've Made
+          </Accordion.Title>
+          <Accordion.Content active={this.state.activeIndex === 3}>
+            <Card.Group items={this.state.myOffers} />
+          </Accordion.Content>
+          <Accordion.Title active={this.state.activeIndex === 4} index={4} onClick={this.handleClick}>
+            <Icon name='dropdown' />
+            My Offers That Have Been Accepted
+          </Accordion.Title>
+          <Accordion.Content active={this.state.activeIndex === 4}>
+            <Card.Group items={this.state.myAcceptedOffers} />
+          </Accordion.Content>
+        </Accordion>
+
+
+        <hr />
+        <Header as='h2' icon textAlign='center'>For Sellers</Header>
+        <Grid columns={4} relaxed>
           <Grid.Column>
             <Segment basic>
               <h3>Add House For Sale</h3>
-              <ContractForm contract="HouseSale" method="addHouseForSale" labels={['House Address', 'Price', 'Deposit Fee']} />
+              <p> Price must be greater than 2000000000000000000 </p>
+              <ContractForm contract="HouseSale" method="addHouseForSale" labels={['House Address', 'Price']} />
               <br/><br/>
             </Segment>
           </Grid.Column>
           <Grid.Column>
             <Segment basic>
-              <h3>Submit Offer</h3>
+              <h3>Take Down House</h3>
+              <ContractForm contract="HouseSale" method="takeDownHouse" labels={['House Id']} />
+              <br/><br/>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment basic>
+              <h3>Accept Offer</h3>
+              <ContractForm contract="HouseSale" method="acceptOffer" labels={['House Id', 'Offer Id']} />
+              <br/><br/>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment basic>
+              <h3>Close Deal</h3>
+              <ContractForm contract="HouseSale" method="closeDeal" labels={['House Id']} />
               <br/><br/>
             </Segment>
           </Grid.Column>
         </Grid>
 
-
-
         <hr />
-        <ContractForm contract="HouseSale" method="makeOffer" labels={['House Id', 'Offer', 'Days Until Closing']} sendArgs={{value: '5000'}}/>
-        <br/><br/>
+        <Header as='h2' icon textAlign='center'>For Buyers</Header>
+        <Grid columns={3} relaxed>
+          <Grid.Column>
+            <Segment basic>
+              <h3>Make Offer</h3>
+              <ContractForm contract="HouseSale" method="makeOffer" labels={['House Id', 'Offer', 'Days Until Closing']} sendArgs={{value: '2000000000000000000'}}/>
+              <br/><br/>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment basic>
+              <h3>Pull Offer</h3>
+              <ContractForm contract="HouseSale" method="pullOffer" labels={['Offer Id']} />
+              <br/><br/>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment basic>
+              <h3>Submit remaining funds </h3>
+              <br/><br/>
+            </Segment>
+          </Grid.Column>
+        </Grid>
 
-        <Card.Group items={this.state.items} />
+        <form onSubmit={this.onSubmit}>
+          <h4>Submit remaining funds</h4>
+          <div>
+            <label> House Id</label>
+            <input
+              value={this.state.id}
+              onChange={event => this.setState({ id: event.target.value })}
+            />
+          </div>
+          <div>
+            <label> Amount of ether to enter</label>
+            <input
+              value={this.state.value}
+              onChange={event => this.setState({ value: event.target.value })}
+            />
+          </div>
+          <button>Enter</button>
+
+        </form>
+
+
+
+
+
+
 
       </Container>
 

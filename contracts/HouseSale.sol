@@ -48,6 +48,8 @@ contract HouseSale is Ownable {
         uint daysUntilClosingOffer;
         uint id;
         uint depositFee;
+        uint closingDate;
+        uint remainingFunds;
         address buyer;
         address seller;
         OfferState offerState;
@@ -65,7 +67,7 @@ contract HouseSale is Ownable {
     mapping (address => uint) offersMade;
     mapping (address => uint) acceptedOffers;
     mapping (address => uint) housesByUser;
-
+    mapping (address => uint) sentOffers;
 
 
     //Create an enum that tracks the state of the transaction
@@ -105,13 +107,13 @@ contract HouseSale is Ownable {
       * @param _price Price the seller wants to sell the house for
       * @param _depositFee Required fee to submit an offer on the house
       */
-    function addHouseForSale(string _address, uint _price, uint _depositFee) public {
+    function addHouseForSale(string _address, uint _price) public {
         Home memory newHome = Home({
             homeAddress: _address,
             id: houseId,
             salePrice: _price,
             offerId: 0,
-            depositFee: _depositFee,
+            depositFee: 2 ether,
             daysUntilClosing: 0,
             remainingFunds: 0,
             closingDate: 0,
@@ -162,7 +164,10 @@ contract HouseSale is Ownable {
             daysUntilClosingOffer: _daysUntilClosing,
             offerState: OfferState.Pending,
             seller: houses[_houseId].seller,
-            buyer: msg.sender});
+            buyer: msg.sender,
+            closingDate: 0,
+            remainingFunds: 0
+        });
 
         houses[_houseId].submittedOfferIds.push(offerNum);
         offerNum = offerNum.add(1);
@@ -170,6 +175,8 @@ contract HouseSale is Ownable {
 
         offers.push(newOffer);
         offersMade[msg.sender]++;
+        sentOffers[houses[_houseId].seller]++;
+
 
     }
 
@@ -226,8 +233,10 @@ contract HouseSale is Ownable {
         houses[_houseId].offerId = offers[_offerId].id;
         houses[_houseId].remainingFunds = houses[_houseId].salePrice.sub(houses[_houseId].depositFee);
         //houses[_houseId].closingDate = now + houses[_houseId].daysUntilClosing * 1 seconds;
-        houses[_houseId].closingDate = now.add(houses[_houseId].daysUntilClosing.mul(1 seconds));
+        houses[_houseId].closingDate = now.add(houses[_houseId].daysUntilClosing.mul(86400 seconds));
         acceptedOffers[houses[_houseId].buyer]++;
+        offers[_offerId].closingDate = houses[_houseId].closingDate;
+        offers[_offerId].remainingFunds = houses[_houseId].remainingFunds;
         offers[_offerId].offerState = OfferState.Accepted;
     }
 
@@ -397,6 +406,21 @@ contract HouseSale is Ownable {
             }
         }
         return result;
+    }
+
+    function getOffersIdsOnMyHouses() external view returns(uint[]) {
+        uint[] memory result = new uint[](sentOffers[msg.sender]);
+
+        uint counter = 0;
+        for (uint i = 0; i < offerNum; i++) {
+            //Checks to see if house has not been taken down
+            if (offers[i].seller == msg.sender) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+
     }
 
     /*make a function to show all offers on a house
