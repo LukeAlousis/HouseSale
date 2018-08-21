@@ -20,7 +20,7 @@ contract('HouseSale Contract', async (accounts) => {
   async () => {
 
     //Owner puts house up for sale
-    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', '1000000000000000000', {
+    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', {
       from: accounts[0]
     });
     //Get initial balance of the buyer
@@ -29,7 +29,7 @@ contract('HouseSale Contract', async (accounts) => {
     //Buyer submits an offer on house Id 0 and deposits 1 eth
     await houseSale.makeOffer('0', '4000000000000000000', '1', {
       from: accounts[1],
-      value: '1000000000000000000'
+      value: '5000'
     });
     //An account thats not the buyer tries to pull the offer and receive the
     //deposit
@@ -64,7 +64,7 @@ contract('HouseSale Contract', async (accounts) => {
   //Make sure only the owner of a contract can accept an offers
   it('only the owner can accept an offer', async () => {
     //Put house up for sale
-    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', '5000', {
+    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', {
       from: accounts[0]
     });
     //Get initial balance of the seller
@@ -96,7 +96,7 @@ contract('HouseSale Contract', async (accounts) => {
   //Ensure if an offer is made and rejected the potential buyer gets their
   //deposit back
   it('can recive deposit if offer is rejected', async () => {
-    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', '1000000000000000000', {
+    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', {
       from: accounts[0]
     });
     //Get initial balance of the potential buyer
@@ -105,11 +105,11 @@ contract('HouseSale Contract', async (accounts) => {
     //Two offers submitted on house Id 0
     await houseSale.makeOffer('0', '4000000000000000000', '1', {
       from: accounts[1],
-      value: '1000000000000000000'
+      value: '5000'
     });
     await houseSale.makeOffer('0', '4500000000000000000', '1', {
       from: accounts[2],
-      value: '1000000000000000000'
+      value: '5000'
     });
     //The owner accepts second offer offerid '1' on house id '0'
     await houseSale.acceptOffer('0', '1', {
@@ -145,7 +145,7 @@ contract('HouseSale Contract', async (accounts) => {
   //Test tht runs through the contract from start to finish
   it('sends money to the seller once the deal has closed', async () => {
     //Put house up for sale
-    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', '5000', {
+    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', {
       from: accounts[0]
     });
     //Get initial balance of the seller
@@ -202,7 +202,7 @@ contract('HouseSale Contract', async (accounts) => {
   //gets the potential buyers deposit
   it('seller gets buyers deposit if contract isnt funded', async () => {
     //Put house up for sale
-    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', '1000000000000000000', {
+    await houseSale.addHouseForSale("40 House Road", '5000000000000000000', {
       from: accounts[0]
     });
     //Get initial balance of the seller
@@ -211,11 +211,11 @@ contract('HouseSale Contract', async (accounts) => {
     //Two offers submitted on house Id 0
     await houseSale.makeOffer('0', '4000000000000000000', '1', {
       from: accounts[1],
-      value: '1000000000000000000'
+      value: '5000'
     });
     await houseSale.makeOffer('0', '4500000000000000000', '1', {
       from: accounts[2],
-      value: '1000000000000000000'
+      value: '5000'
     });
     //The owner accepts second offer offerid '1' on house id '0'
     await houseSale.acceptOffer('0', '1', {
@@ -240,17 +240,14 @@ contract('HouseSale Contract', async (accounts) => {
     await houseSale.closeDeal('0', {
       from: accounts[0]
     });
-
     //Get final balcnce of the seller
     const finalBalance = await web3.eth.getBalance(accounts[0]);
 
 
     /*Compare the difference between the starting balance and final balance of
     the seller to confirm the failed buyers deposit was sent*/
-    const difference = finalBalance - initialBalance;
-
-    assert(difference > '900000000000000000');
-
+    const difference = initialBalance - finalBalance;
+    assert(difference > '10000000000000000');
   });
 
 });
