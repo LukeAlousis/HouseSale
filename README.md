@@ -18,8 +18,11 @@ The buyer then has to submit all remaining funds to the contract using the web a
 
 ### For buyers:
 Add House For Sale: Allows sellers to put a house up for sale by entering the house address and price.
+
 Take Down House: Allows sellers to remove a house for sale as long as they haven't accepted an offer.
+
 Accept Offer: Allows the seller to accept an offer made on their house.
+
 Close Deal: When called, this function transfers the buyers funds to the seller. This can only be called after an offer is accepted, the buyer has submitted all funds to the contract and the closing date has passed. If the buyer hasn't submitted all funds by the closing date the buyers deposit is sent to the seller
 
 ### For sellers:
