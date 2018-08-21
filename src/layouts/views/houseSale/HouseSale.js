@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
-import { Card, Container, Grid, Segment, Accordion, Icon, Header } from 'semantic-ui-react'
+import { Card, Container, Grid, Segment, Accordion, Icon, Header, Message } from 'semantic-ui-react'
 
 //resources
   //const sigUtil = require("eth-sig-util")
@@ -268,19 +268,28 @@ class HouseSale extends Component {
       <Container>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
 
-        <h1>HouseSale Contract</h1>
-        <h2>Active Account</h2>
-        <AccountData accountIndex="0" units="ether" precision="3" />
-        <br/><br/>
-        <p>
+        <h1>Real Estate Offering and Transaction Platform</h1>
+        <p> This application allows sellers to offer houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.</p>
+        <br />
+        <p><strong>Important Note:</strong> This contract uses a closing date to determine when the buyer must submit offers and deal can be closed. This closing date can be used as a <strong>rough estimate only</strong> as timestamps can be manipulated by the miner. It is recommended to submit funds well before the closing date.</p>
+        <br />
+        <Message warning>
+          <Message.Header>Please refresh this page after any transaction has been confirmed</Message.Header>
+          <p>To get updated houses and offers this page must be refreshed </p>
+        </Message>
 
-        </p>
+        <hr />
+        <h3>Active Account</h3>
+        <AccountData accountIndex="0" units="ether" precision="3" />
+        <br />
         <Accordion fluid styled>
           <Accordion.Title active={this.state.activeIndex === 0} index={0} onClick={this.handleClick}>
             <Icon name='dropdown' />
             All Houses For Sale
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 0}>
+            <p>Here you can see all of the houses that are for sale in this contract. To add a house, use the Add House For Sale function below. To put in an offer for a house, record the <strong>House Id</strong> and enter it with your offer price into the <strong>Make Offer</strong> function below.</p>
+            <br />
             <Card.Group items={this.state.allHouses} />
           </Accordion.Content>
           <Accordion.Title active={this.state.activeIndex === 1} index={1} onClick={this.handleClick}>
@@ -288,6 +297,8 @@ class HouseSale extends Component {
             All of my Houses
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 1}>
+            <p>Here you can see all of the houses you have put up for sale, including your houes that have accepted offers, that are ready to close, that have closed or that have been removed. </p>
+            <br />
             <Card.Group items={this.state.myHouses} />
           </Accordion.Content>
           <Accordion.Title active={this.state.activeIndex === 2} index={2} onClick={this.handleClick}>
@@ -295,6 +306,8 @@ class HouseSale extends Component {
             Pending offers on my Houses
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 2}>
+            <p>Here you can see all offers that have been made on your houses <strong>if</strong> the offer hasn't been accepted. To accept an offer, record the <strong>House Id and Offer Id</strong> and enter them into the Accept Offer function below.</p>
+            <br />
             <Card.Group items={this.state.pendingOffersOnMyHouses} />
           </Accordion.Content>
           <Accordion.Title active={this.state.activeIndex === 3} index={3} onClick={this.handleClick}>
@@ -302,6 +315,8 @@ class HouseSale extends Component {
             Offers I've Accepted
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 3}>
+            <p>Here you can see the offers you've accepted. Once an offer has been accepted the buyer has until the closing date to submit all remaining funds to the contract. Once all funds have been submitted and the closing date has passed, the Close Deal function below can be called to transfer the funds automatically to your wallet.</p>
+            <br />
             <Card.Group items={this.state.offersIAccepted} />
           </Accordion.Content>
           <Accordion.Title active={this.state.activeIndex === 4} index={4} onClick={this.handleClick}>
@@ -309,6 +324,8 @@ class HouseSale extends Component {
             Offers I've Made
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 4}>
+            <p>Here you can see the offers you've made on any house as well as the offer's state. This shows if the offer is pending, if it has been accepted and requires funds to be sent, if all funds have been sent and the deal is ready to close, or if the offer has been pulled.</p>
+            <br />
             <Card.Group items={this.state.myOffers} />
           </Accordion.Content>
           <Accordion.Title active={this.state.activeIndex === 5} index={5} onClick={this.handleClick}>
@@ -316,9 +333,12 @@ class HouseSale extends Component {
             My Offers That Have Been Accepted and Require Funding
           </Accordion.Title>
           <Accordion.Content active={this.state.activeIndex === 5}>
+            <p>This is an important one! Once your offer has been accepted you have until the closing date to submit all funds to the contract otherwise your deposit will be sent to the seller. To submit the remaining funds, record the <strong>House Id and Remaining Balance ammount</strong> and enter them into the Submit Remaining Funds function below. Once funds are submitted and the closing date has passed the Close Deal function can be called to transfer all funds to the seler and transfer the home ownership to you (**Transferring ownership is not yet a feature**).</p>
+            <br />
             <Card.Group items={this.state.myAcceptedOffers} />
           </Accordion.Content>
         </Accordion>
+
 
 
         <hr />
@@ -353,7 +373,12 @@ class HouseSale extends Component {
             </Segment>
           </Grid.Column>
         </Grid>
-
+        <p>
+          <strong>Add House For Sale:</strong> Allows sellers to put a house up for sale by entering the house address and price. <br />
+          <strong>Take Down House:</strong> Allows sellers to remove a house for sale as long as they haven't accepted an offer. <br />
+          <strong>Accept Offer:</strong> Allows the seller to accept an offer made on their house. <br />
+          <strong>Close Deal:</strong> When called, this function transfers the buyers funds to the seller. This can only be called after an offer is accepted, the buyer has submitted all funds to the contract and the closing date has passed. If the buyer hasn't submitted all funds by the closing date the buyers deposit is sent to the seller <br />
+        </p>
         <hr />
         <Header as='h2' icon textAlign='center'>For Buyers</Header>
         <Grid columns={3} relaxed>
@@ -390,13 +415,17 @@ class HouseSale extends Component {
                     onChange={event => this.setState({ value: event.target.value })}
                   />
                 </div>
-                <button>Enter</button>
+                <button>Submit</button>
 
               </form>
             </Segment>
           </Grid.Column>
         </Grid>
-
+        <p>
+          <strong>Make Offer:</strong> Allows a user to bid on a house that is for sale by entering the <strong>houseId</strong>, their offer (in Wei) and the days, after an offer is accepted, until the deal closes and funds are transferred to the seller. To send this transaction the user submits a 5000 wei deposit that is subtracted from the purchase price.  <br />
+          <strong>Pull Offer:</strong> Allows the user to remove there offer on a house as long as the offer hasn't been accepted <br />
+          <strong>Submit Remaining Funds:</strong> Allows the user to submit all remaining funds (purchase price - deposit). This must be done after an offer is accepted and <strong> before the closing date.</strong> <br />
+        </p>
 
         <hr />
         <Header as='h2' icon textAlign='center'>For Contract Owner</Header>

@@ -24,7 +24,7 @@ contract HouseSale is Pausable {
     uint readyToClose;
 
 
-    //Create a struct of the house that will be mapped by an Id
+    //Create a struct of a house
     struct Home {
         string homeAddress;
         uint id;
@@ -57,16 +57,15 @@ contract HouseSale is Pausable {
 
     }
 
-    //Create a mapping of all of the houses for sale
+    //Create a array of all of the houses for sale
     Home[] public houses;
 
-    //Create a mapping of all of the offers made on a house
+    //Create a array of all of the offers made on a house
     Offer[] public offers;
 
     //Mappings to keep track of the number of offers, accepted offers or houses
     //a user has
     mapping (address => uint) offersMade;
-    //mapping (address => uint) acceptedOffers;
     mapping (address => uint) offersIAccepted;
     mapping (address => uint) housesByUser;
     mapping (address => uint) sentOffers;
@@ -75,7 +74,7 @@ contract HouseSale is Pausable {
 
 
 
-    //Create an enum that tracks the state of the transaction
+    //Create enums that tracks the state of the transactions
     enum State {Sold, ForSale, OfferAccepted, ReadyToClose, FailedToClose, Removed}
     enum Funds {DepositMade, FundsRequired, AllFundsSubmitted}
     enum OfferState {Pending, Accepted, ReadyToClose, Pulled, FailedToClose, Complete}
@@ -98,19 +97,10 @@ contract HouseSale is Pausable {
 
     }
 
-  /*  constructor() public {
-        // Here, set the owner as the person who instantiated the contract
-        //and set your houseId to 0.
-        houseId = 0;
-        housesForSale = 0;
-
-    }*/
-
     /* @dev Add a house for sale by filling in the house struct then push the
       newHome struct into the houses array
       * @param _address House address
       * @param _price Price the seller wants to sell the house for
-      * @param _depositFee Required fee to submit an offer on the house
       */
     function addHouseForSale(string _address, uint _price) public whenNotPaused(){
         Home memory newHome = Home({
@@ -200,28 +190,6 @@ contract HouseSale is Pausable {
 
     }
 
-    /* @dev Returns the offer to the potential buyer if another offer has been
-    accepted.
-      * @param w Width of the rectangle.
-      * @param h Height of the rectangle.
-      * @return s The calculated surface.
-      * @return p The calculated perimeter.
-      */
-    /*function returnDeposit(uint _offerId) public verifyBuyer(offers[_offerId].buyer){
-        require(
-          offers[_offerId].offerState != OfferState.Accepted
-          || offers[_offerId].offerState != OfferState.Pulled
-        );
-        offers[_offerId].offerState = OfferState.Pulled;
-        offers[_offerId].buyer.transfer(offers[_offerId].depositFee);
-
-    }*/
-
-    /*Make a function to accept the offer, change the house state to OfferAccepted
-    and the offer state to Accepted. Non accepted offers can the return their
-    deposit from the returnDeposit function ****Test to see if you can
-    accept an offer if the house isnt there*****/
-
     /* @dev Seller accepts an offer made on a house. Require the house to be
     for sale and the offerState to be pending.
       * @param _houseId Id of the houe for sale
@@ -249,9 +217,6 @@ contract HouseSale is Pausable {
         housesForSale = housesForSale.sub(1);
 
     }
-
-    /*
-
 
     /* @dev Buyer submits remaining funds after an offer has been accepted,
     before the closing date. If past closing date then fail. Only the buyer Can
@@ -309,13 +274,12 @@ contract HouseSale is Pausable {
 
 
 
+    /*The following functions are view functions used to get information
+    for the web application*/
 
 
-    /* @dev Gets a list of houses that have not been removed. May want to
-    change this to houses that are for sale by changing the if statement to
-    (houses[i].state == State.Accepted) and subtracting housesForSale by 1 once
-    an offer has been accepted.
-      * @return uint[] Array of houses that have not been removed
+    /* @dev Gets a list of houses that are for sale
+      * @return uint[] Array of houses that are for sale
       */
     function getHousesForSale() external view returns(uint[]) {
         uint[] memory result = new uint[](housesForSale);
@@ -364,13 +328,10 @@ contract HouseSale is Pausable {
     }
 
 
-    // Function to return all my accepted offers
-    /* @dev Gets a list of the msg.senders accepted offers by Id
+    /* @dev Gets a list of the msg.senders accepted offers by Id after
     an offer has been accepted.
-      * @return uint[] Array of house Ids that are owned by the seller
+      * @return uint[] Array of accepted offers
       */
-
-
     function getMyAcceptedOffersId() external view returns(uint[]) {
         uint[] memory result = new uint[](offerRequiresFunding[msg.sender]);
 
@@ -390,6 +351,10 @@ contract HouseSale is Pausable {
         return result;
     }
 
+    /* @dev Gets a list of the msg.senders offers by Id
+    that they accepted
+      * @return uint[] Array of offers the seller has accepted
+      */
     function getOffersIAcceptedId() external view returns(uint[]) {
         uint[] memory result = new uint[](offersIAccepted[msg.sender]);
 
@@ -409,11 +374,8 @@ contract HouseSale is Pausable {
         return result;
     }
 
-    //Function to return all my offers
-
     /* @dev Gets a list of the msg.senders offers by Id
-    an offer has been accepted.
-      * @return uint[] Array of house Ids that are owned by the seller
+      * @return uint[] Array of offers by the msg.sender
       */
     function getMyOffersId() external view returns(uint[]) {
         uint[] memory result = new uint[](offersMade[msg.sender]);
@@ -428,10 +390,8 @@ contract HouseSale is Pausable {
         }
         return result;
     }
-    //Fundtion to return all my houses for sale
 
     /* @dev Gets a list of the msg.senders houses for sale by Id
-    an offer has been accepted.
       * @return uint[] Array of house Ids that are owned by the seller
       */
     function getMyHousesId() external view returns(uint[]) {
@@ -448,9 +408,8 @@ contract HouseSale is Pausable {
         return result;
     }
 
-    /* @dev Gets a list of the msg.senders houses for sale by Id
-    an offer has been accepted.
-      * @return uint[] Array of house Ids that are owned by the seller
+    /* @dev Gets a list of the msg.senders houses that are ready to close
+      * @return uint[] Array of house Ids that have state ready to close
       */
     function getReadyToCloseId() external view returns(uint[]) {
         uint[] memory result = new uint[](readyToClose);
@@ -465,7 +424,9 @@ contract HouseSale is Pausable {
         }
         return result;
     }
-    //Pending offers that have not been accepted
+    /* @dev Gets a list of pending offers on the msg.senders houses
+      * @return uint[] Array of pending offers
+      */
     function getOffersIdsOnMyHouses() external view returns(uint[]) {
         uint[] memory result = new uint[](sentOffers[msg.sender]);
 
@@ -484,21 +445,6 @@ contract HouseSale is Pausable {
 
     }
 
-    /*make a function to show all offers on a house
-    function getOffers(uint _houseId) external view verifySeller(houses[_houseId].seller) returns(uint[]) {
-        //uint[] memory result = new uint[](houses[_houseId].numberOfOffers.sub(houses[_houseId].numberOfPulledOffers));
-        uint[] memory result = new uint[](houses[_houseId].numberOfOffers);
-
-        uint counter = 0;
-        for (uint i = 0; i < houses[_houseId].numberOfOffers; i++) {
-            //Checks to see if offer has not been taken down
-            if (offers[i].offerState != OfferState.Pulled) {
-                result[counter] = i;
-                counter++;
-            }
-        }
-        return result;
-    } */
 
 
 }

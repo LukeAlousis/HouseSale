@@ -11,8 +11,8 @@ this react project (but not in the 'src' folder). Remember, these are contracts
 that you will want to access to manipulate the front-end, so no need to
 import the Migrations.sol contract
 */
-import ComplexStorage from './../build/contracts/ComplexStorage.json'
-import Lottery from './../build/contracts/Lottery.json'
+//import ComplexStorage from './../build/contracts/ComplexStorage.json'
+//import Lottery from './../build/contracts/Lottery.json'
 import HouseSale from './../build/contracts/HouseSale.json'
 
 
@@ -27,8 +27,8 @@ const drizzleOptions = {
     }
   },
   contracts: [
-    ComplexStorage,
-    Lottery,
+    //ComplexStorage,
+    //Lottery,
     HouseSale
   ],
   polls: {
