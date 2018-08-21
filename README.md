@@ -16,13 +16,13 @@ The buyer then has to submit all remaining funds to the contract using the web a
 
 ## Components
 
-For buyers:
+### For buyers:
     • Add House For Sale: Allows sellers to put a house up for sale by entering the house address and price.
     • Take Down House: Allows sellers to remove a house for sale as long as they haven't accepted an offer.
     • Accept Offer: Allows the seller to accept an offer made on their house.
     • Close Deal: When called, this function transfers the buyers funds to the seller. This can only be called after an offer is accepted, the buyer has submitted all funds to the contract and the closing date has passed. If the buyer hasn't submitted all funds by the closing date the buyers deposit is sent to the seller
 
-For sellers:
+### For sellers:
     • Make Offer: Allows a user to bid on a house that is for sale by entering the houseId, their offer (in Wei) and the days, after an offer is accepted, until the deal closes and funds are transferred to the seller. To send this transaction the user submits a 5000 wei deposit that is subtracted from the purchase price.
     • Pull Offer: Allows the user to remove there offer on a house as long as the offer hasn't been accepted.
     • Submit Remaining Funds: Allows the user to submit all remaining funds (purchase price – deposit). This must be done after an offer is accepted and before the closing date.
