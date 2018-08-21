@@ -26,9 +26,11 @@ Accept Offer: Allows the seller to accept an offer made on their house.
 Close Deal: When called, this function transfers the buyers funds to the seller. This can only be called after an offer is accepted, the buyer has submitted all funds to the contract and the closing date has passed. If the buyer hasn't submitted all funds by the closing date the buyers deposit is sent to the seller
 
 ### For sellers:
-    • Make Offer: Allows a user to bid on a house that is for sale by entering the houseId, their offer (in Wei) and the days, after an offer is accepted, until the deal closes and funds are transferred to the seller. To send this transaction the user submits a 5000 wei deposit that is subtracted from the purchase price.
-    • Pull Offer: Allows the user to remove there offer on a house as long as the offer hasn't been accepted.
-    • Submit Remaining Funds: Allows the user to submit all remaining funds (purchase price – deposit). This must be done after an offer is accepted and before the closing date.
+Make Offer: Allows a user to bid on a house that is for sale by entering the houseId, their offer (in Wei) and the days, after an offer is accepted, until the deal closes and funds are transferred to the seller. To send this transaction the user submits a 5000 wei deposit that is subtracted from the purchase price.
+
+Pull Offer: Allows the user to remove there offer on a house as long as the offer hasn't been accepted.
+
+Submit Remaining Funds: Allows the user to submit all remaining funds (purchase price – deposit). This must be done after an offer is accepted and before the closing date.
 
 
 ## Getting Started
