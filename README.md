@@ -3,18 +3,18 @@
 
 This application allows sellers to offer houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.
 
-##User Stories
+## User Stories
 A seller (home owner) wants to sell their house using the blockchain. The seller opens the web app and clicks Add New House For Sale, enters the relevant details including the home address, desired sales price and required deposit amount to submit an offer. The house is then listed on the web application for potential buyers to bid on by placing offers with the required deposit amount.
 
-**FUTURE FEATURES – A future version of this app could utilize a verification system like to verify the seller is a real person and owns the property they want to sell. When the house is put up for sale the ownership can be linked to an ERC 721 token that would be transferred to the buyer once the deal is closed.**
+*FUTURE FEATURES – A future version of this app could utilize a verification system like to verify the seller is a real person and owns the property they want to sell. When the house is put up for sale the ownership can be linked to an ERC 721 token that would be transferred to the buyer once the deal is closed.*
 
 Using the web app, users (potential buyers) can look through the houses for sale and then place offers on the sellers house. Each offer requires the House Id, Offer Price (The amount they are willing to pay for the house) and the Days until closing (when the potential buyer would like the deal to close).
 
 The seller can then look through all offers that have been placed on their property by entering the houseId into the web app. The web app will only display offers to the seller. The seller can then accept any offer that has been made. Once an offer has been accepted the buyers deposit is locked in the contract, the closing date is set by adding day the offer has been accepted plus Days until closing (set by the buyer), the remaining balance is calculated as the offer price minus the offer deposit.
 
-The buyer then has to submit all remaining funds to the contract using the web app. The submission of funds must be done before the closing date, if done after the closing the transaction will fail and the buyers deposit will be sent to the seller. Once all funds are submitted the buyer and seller must wait until the closing date to close the deal. The deal can be closed by any user that has the houseId. When closeDeal is called the funds are submitted to the seller **FUTURE FEATURE – An ERC 721 token representing ownership of the house would be sent to the buyer** and the deal has been completed!
+The buyer then has to submit all remaining funds to the contract using the web app. The submission of funds must be done before the closing date, if done after the closing the transaction will fail and the buyers deposit will be sent to the seller. Once all funds are submitted the buyer and seller must wait until the closing date to close the deal. The deal can be closed by any user that has the houseId. When closeDeal is called the funds are submitted to the seller *FUTURE FEATURE – An ERC 721 token representing ownership of the house would be sent to the buyer* and the deal has been completed!
 
-##Components
+## Components
 
 For buyers:
     • Add House For Sale: Allows sellers to put a house up for sale by entering the house address and price.
