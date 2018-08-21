@@ -133,7 +133,6 @@ contract HouseSale is Pausable {
       */
     function takeDownHouse(uint _houseId) public verifySeller(houses[_houseId].seller) whenNotPaused(){
         require(houses[_houseId].state == State.ForSale);
-        //delete houses[_houseId]; Cant delete because buyers have to take their deposits still
         houses[_houseId].state = State.Removed;
         housesForSale = housesForSale.sub(1);
 

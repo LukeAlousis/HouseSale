@@ -1,13 +1,13 @@
 /* Home View without the use of drizzle components */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
+import { AccountData, ContractForm } from 'drizzle-react-components'
 import { Card, Container, Grid, Segment, Accordion, Icon, Header, Message } from 'semantic-ui-react'
 
 //resources
   //const sigUtil = require("eth-sig-util")
 //components
-import Loadable from 'react-loading-overlay'
+//import Loadable from 'react-loading-overlay'
 
 class HouseSale extends Component {
   constructor(props, context) {
@@ -43,7 +43,7 @@ class HouseSale extends Component {
     //Get all houses for sale
     const allHouses = await Promise.all(offeredHouseIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.houses(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[12] == 1) {
         summary[12] = 'For Sale';
       } else if (summary[12] == 0) {
@@ -57,7 +57,7 @@ class HouseSale extends Component {
       }
 
       return {
-        header: 'House Id: ' + address + '  -  ' + summary[0],
+        header: summary[0],
         description: 'House Id: ' + address
                       + ', Price: ' + summary[2] + ' wei'
                       + ', State: ' + summary[12]
@@ -67,7 +67,7 @@ class HouseSale extends Component {
     //Get my houses for sale
     const myHouses = await Promise.all(myHouseIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.houses(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[12] == 1) {
         summary[12] = 'For Sale';
         summary[10] = 0;
@@ -97,7 +97,7 @@ class HouseSale extends Component {
     //Get all houses that are ready to close
     const housesReadyToClose = await Promise.all(readyToCloseIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.houses(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[12] == 1) {
         summary[12] = 'For Sale';
       } else if (summary[12] == 0) {
@@ -124,7 +124,7 @@ class HouseSale extends Component {
     // Get all pending offers on my houses
     const pendingOffersOnMyHouses = await Promise.all(offersOnMyHousesIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.offers(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[9] == 1) {
         summary[9] = 'Accepted, waiting for remaining funds to be submitted';
       } else if (summary[9] == 0) {
@@ -149,7 +149,7 @@ class HouseSale extends Component {
     //List of my offers
     const myOffers = await Promise.all(myOfferIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.offers(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[9] == 1) {
         summary[9] = 'Accepted, need to submit remaining funds';
       } else if (summary[9] == 0) {
@@ -175,7 +175,7 @@ class HouseSale extends Component {
     //List of my accepted offers
     const myAcceptedOffers = await Promise.all(myAcceptedOfferIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.offers(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[9] == 1) {
         summary[9] = 'Accepted, need to submit remaining funds';
       } else if (summary[9] == 0) {
@@ -199,7 +199,7 @@ class HouseSale extends Component {
     //List of my offers I've accepted
     const offersIAccepted = await Promise.all(offersIAcceptedIds.map(async address => {
       let summary = await this.contracts.HouseSale.methods.offers(address).call();
-      console.log(summary);
+      //console.log(summary);
       if (summary[9] == 1) {
         summary[9] = 'Accepted, waiting for remaining funds to be submitted';
       } else if (summary[9] == 0) {
@@ -231,8 +231,8 @@ class HouseSale extends Component {
     this.setState({ offersIAccepted });
 
 
-    console.log(allHouses);
-    console.log(this.contracts.HouseSale.options.address);
+    //console.log(allHouses);
+    console.log("Contract Address: " + this.contracts.HouseSale.options.address);
 
   }
 
@@ -248,8 +248,8 @@ class HouseSale extends Component {
 
   onSubmit = async (event) => {
     event.preventDefault();
-    console.log(this.state.id);
-    console.log(this.state.value);
+    //console.log(this.state.id);
+    //console.log(this.state.value);
 
     await this.contracts.HouseSale.methods.submitRemainingFunds(this.state.id).send({
       from: this.props.accounts[0],
@@ -354,7 +354,7 @@ class HouseSale extends Component {
           <Grid.Column>
             <Segment basic>
               <h3>Take Down House</h3>
-              <ContractForm contract="HouseSale" method="takeDownHouse" labels={['House Id']} />
+              <ContractForm contract="HouseSale" method="takeDownHouse" labels={['House Id']} sendArgs={{gas: '100000'}}/>
               <br/><br/>
             </Segment>
           </Grid.Column>

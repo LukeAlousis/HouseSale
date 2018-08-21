@@ -3,6 +3,8 @@
 
 This application allows sellers to offer houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.
 
+## Links to Required Documents
+
 ## User Stories
 A seller (home owner) wants to sell their house using the blockchain. The seller opens the web app and clicks Add New House For Sale, enters the relevant details including the home address, desired sales price and required deposit amount to submit an offer. The house is then listed on the web application for potential buyers to bid on by placing offers with the required deposit amount.
 

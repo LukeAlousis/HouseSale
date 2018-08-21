@@ -13,7 +13,7 @@ import drizzleOptions from './drizzleOptions'
 
 //import App component (acess to the rest of the application)
 import App from './App'
-import HomeContainer from './layouts/views/home/HomeContainer'
+//import HomeContainer from './layouts/views/home/HomeContainer'
 //import Transactions from './layouts/views/transactions/TransactionsContainer'
 //import LotteryContainer from './layouts/views/Lottery/LotteryContainer'
 import HouseSaleContainer from './layouts/views/houseSale/HouseSaleContainer'
