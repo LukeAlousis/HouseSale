@@ -5,13 +5,10 @@ Six tests were designed to provide adequate coverage for the contract.
 1. Make sure the contract deploys
 Simple test to make sure the contract has deployed
 
-2. Only the owner can put a house up for sale
-The owner of the contract is account[0]. This test test to see if account[1] is able to put up a house for sale. If an error is thrown when account[1] sends addHouseForSale then the test passes.
-
-3. Make sure only the buyer that put in an offer can pull his offer and receive his deposit back if the offer hasn’t been accepted
+2. Make sure only the buyer that put in an offer can pull his offer and receive his deposit back if the offer hasn’t been accepted
 The owner puts a house up for sale for 5 eth. The buyer puts in an offer with a deposit of 1 eth. An account that is not the buyer tries to pull the offer to receive the buyers deposit. If this fails the test continues with the buyer pulling his offer. The buyer then receives the deposit back minus the gas fees.
 
-4.Make sure only the owner of the contract can accept an offer
+3. Make sure only the owner of the contract can accept an offer
 Couple offers are made and someone other than the owner tries to accept an offer. If the attempt fails then the test passed.
 
 4. If an offer is accepted make sure anyone else who put in an offer can get their deposit back
