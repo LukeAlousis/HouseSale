@@ -1,4 +1,4 @@
-#Testing the HouseSale Contract
+# Testing the HouseSale Contract
 
 Six tests were designed to provide adequate coverage for the contract.
 
