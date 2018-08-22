@@ -37,9 +37,50 @@ Submit Remaining Funds: Allows the user to submit all remaining funds (purchase 
 
 ## Getting Started
 
-Clone the Repo from Git
+Clone or download the Repo from Git
 
-## Starting (Your Own Version) on TestRPC (Local Testnet)
+### Install NodeJs if not already installed
+```
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+```
+
+### Install Truffle if not already installed
+```
+npm install -g truffle
+```
+
+### Install ganache-cli if not already installed
+```
+npm install -g ganache-cli
+```
+### Compile the smart contracts
+Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo. Compile the smart contracts using
+
+```
+> truffle compile
+```
+
+Note: If you are having issues with the sync folder run the following in the project directory
+```
+> # npm update sync
+```
+
+## Testing the contract
+Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. To launch the tests follow the instructions below.
+
+### Enter the Truffle development environment
+```
+> truffle develop
+```
+
+### Start the tests
+```
+truffle(develop)> test
+```
+You should see six tests pass.
+
 
 For those with MacOS, download Ganache here: http://truffleframework.com/ganache/. This will visualize your local blockchain (so that you can see all transactions, associated 'costs' and otherwise). Ganache is the new way to interact with TestRPC without having 10 terminals open. For those of you with Windows or other OS, you should be able to find your download(s) here: https://github.com/trufflesuite/ganache/releases
 
@@ -48,7 +89,7 @@ Go ahead and start Ganache by opening the application on your computer. You shou
 ![alt text](http://truffleframework.com/images/suite/ganache/ganache-window.png)
 
 
-Open your terminal and 'cd' (change directory) to the appropiate folder, where you have downloaded and unzipped the repo. Then compile and migrate your smart contracts like so (make sure that you have installed all dependencies related to truffle here: http://truffleframework.com/docs/getting_started/installation):
+Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo. Then compile and migrate your smart contracts like so
 ```
 > truffle compile
 > truffle migrate

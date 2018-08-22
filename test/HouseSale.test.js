@@ -107,14 +107,17 @@ contract('HouseSale Contract', async (accounts) => {
       from: accounts[1],
       value: '5000'
     });
+
     await houseSale.makeOffer('0', '4500000000000000000', '1', {
       from: accounts[2],
       value: '5000'
     });
+
     //The owner accepts second offer offerid '1' on house id '0'
     await houseSale.acceptOffer('0', '1', {
       from: accounts[0]
     });
+
 
     //Someone other than the rejected buyer tries to get the deposit back
     try {
@@ -125,6 +128,8 @@ contract('HouseSale Contract', async (accounts) => {
     } catch (err) {
       executed = 'fail'
     }
+
+
 
     assert.equal('fail', executed);
 

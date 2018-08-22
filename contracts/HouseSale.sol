@@ -122,7 +122,7 @@ contract HouseSale is Pausable {
         });
         houseId = houseId.add(1);
         housesForSale = housesForSale.add(1);
-        housesByUser[msg.sender]++;
+        housesByUser[msg.sender] = housesByUser[msg.sender].add(1);
         houses.push(newHome);
 
     }
@@ -168,8 +168,8 @@ contract HouseSale is Pausable {
         houses[_houseId].numberOfOffers = houses[_houseId].numberOfOffers.add(1);
 
         offers.push(newOffer);
-        offersMade[msg.sender]++;
-        sentOffers[houses[_houseId].seller]++;
+        offersMade[msg.sender] = offersMade[msg.sender].add(1);
+        sentOffers[houses[_houseId].seller] = sentOffers[houses[_houseId].seller].add(1);
 
 
     }
@@ -207,9 +207,9 @@ contract HouseSale is Pausable {
         //houses[_houseId].closingDate = now + houses[_houseId].daysUntilClosing * 1 seconds;
         houses[_houseId].closingDate = now.add(houses[_houseId].daysUntilClosing.mul(86400 seconds));
         //acceptedOffers[houses[_houseId].buyer]++;
-        offersIAccepted[houses[_houseId].seller]++;
-        offerRequiresFunding[houses[_houseId].buyer]++;
-        sentOffers[houses[_houseId].seller]--;
+        offersIAccepted[houses[_houseId].seller] = offersIAccepted[houses[_houseId].seller].add(1);
+        offerRequiresFunding[houses[_houseId].buyer] = offerRequiresFunding[houses[_houseId].buyer].add(1);
+        sentOffers[houses[_houseId].seller] = sentOffers[houses[_houseId].seller].sub(1);
         offers[_offerId].closingDate = houses[_houseId].closingDate;
         offers[_offerId].remainingFunds = houses[_houseId].remainingFunds;
         offers[_offerId].offerState = OfferState.Accepted;
@@ -225,13 +225,13 @@ contract HouseSale is Pausable {
       */
     function submitRemainingFunds(uint _houseId) public payable verifyBuyer(houses[_houseId].buyer) whenNotPaused(){
         if (now >= houses[_houseId].closingDate) {
-            offerRequiresFunding[houses[_houseId].buyer]--;
+            offerRequiresFunding[houses[_houseId].buyer] = offerRequiresFunding[houses[_houseId].buyer].sub(1);
             transferDepositToSeller(_houseId);
             msg.sender.transfer(msg.value);
         } else {
             require(msg.value == houses[_houseId].remainingFunds);
             require(houses[_houseId].state == State.OfferAccepted);
-            offerRequiresFunding[houses[_houseId].buyer]--;
+            offerRequiresFunding[houses[_houseId].buyer] = offerRequiresFunding[houses[_houseId].buyer].sub(1);
             houses[_houseId].state = State.ReadyToClose;
             readyToClose = readyToClose.add(1);
             offers[houses[_houseId].offerId].offerState = OfferState.ReadyToClose;
