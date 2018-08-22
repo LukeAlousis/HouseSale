@@ -68,7 +68,7 @@ Note: If you are having issues with the sync folder run the following in the pro
 ```
 
 ## Testing the contract
-Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. To launch the tests follow the instructions below.
+Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. To launch the tests, in your terminal, make sure you are in the repo folder and follow the instructions below.
 
 ### Enter the Truffle development environment
 ```
