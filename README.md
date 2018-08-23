@@ -1,7 +1,7 @@
 
 # Real Estate Offering and Transaction Platform
 
-This application allows sellers to offer houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.
+This application allows sellers to offer "imaginary" houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.
 
 ## Links to Required Documents
 
