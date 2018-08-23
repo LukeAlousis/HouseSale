@@ -2,11 +2,11 @@
 
 ## Implemented a circuit breaker / emergency stop
 
-The Pausable library is used for the emergency stop. It ensures that only the owner of the contract account is able to pause the functions that can change state
+The Pausable library is used for the emergency stop. It ensures that only the owner of the contract account is able to pause the functions that can change state.
 
 ## Included the libraries from OpenZepplin called SafeMath and Pausable
 
-TheSafeMath library prevents over/under vulnerabilities from occurring by utilizing the add, subtract, multiply and divide functions for math operations.
+TheSafeMath library prevents integer Overflow and Underflow vulnerabilities from occurring by utilizing the add, subtract, multiply and divide functions for math operations.
 
 ## Modifiers to verify the buyer and seller
 
