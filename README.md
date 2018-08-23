@@ -91,7 +91,7 @@ truffle(develop)> test
 ```
 You should see six tests pass.
 
-## Running the Application
+## Running the Application using the deployed Rinkeby contract
 This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal in the project directory 
 ```
 npm start
