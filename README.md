@@ -62,7 +62,7 @@ Open your terminal and 'cd' (change directory) to the appropriate folder, where 
 > truffle compile
 ```
 
-Note: If you are having issues with the sync folder run the following in the project directory
+Note: If you are having issues with the scrypt folder run the following in the project directory
 ```
 > # npm install scrypt
 ```
@@ -82,7 +82,7 @@ truffle(develop)> test
 You should see six tests pass.
 
 ## Running the Application
-This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal
+This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal in the project directory 
 ```
 npm start
 ```
