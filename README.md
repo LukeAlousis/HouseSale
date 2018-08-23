@@ -61,10 +61,6 @@ sudo apt-get install -y nodejs
 npm install -g truffle
 ```
 
-### Install ganache-cli if not already installed
-```
-npm install -g ganache-cli
-```
 ### Compile the smart contracts
 Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo. Compile the smart contracts using
 
@@ -96,3 +92,31 @@ This contract has been deployed on the Rinkeby Testnet. To start the application
 ```
 npm start
 ```
+## Starting (Your Own Version) on Ganache (Local Testnet)
+### Install ganache-cli if not already installed
+```
+npm install -g ganache-cli
+```
+### Navigate to the project directory and start ganache
+```
+ganache-cli -b 3
+```
+Copy the seed phrase and access the accounts by entering it into Metamask. 
+
+IMPORTANT! - Make sure, before you deploy the application locally via 'npm start' in your terminal, that your MetaMask is on the 'Localhost 8545' network. Your ether balance should be 100.
+
+
+### Migrate and Start the Application
+
+Open a new terminal window and navigate to the project directory.
+
+Migrate the contracts using
+```
+truffle migrate
+```
+
+Start the application
+```
+npm start
+```
+A web page should open up and show the interface of the DApp.You should still be able to interact with the Rinkeby deployed contract by change the Metamask network to Rinkeby.
