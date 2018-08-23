@@ -64,7 +64,7 @@ Open your terminal and 'cd' (change directory) to the appropriate folder, where 
 
 Note: If you are having issues with the sync folder run the following in the project directory
 ```
-> # npm update sync
+> # npm install scrypt
 ```
 
 ## Testing the contract
