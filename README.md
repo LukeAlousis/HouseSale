@@ -39,7 +39,7 @@ Submit Remaining Funds: Allows the user to submit all remaining funds (purchase 
 
 Clone or download the Repo from Git
 
-### Install NodeJs if not already installed
+### Install Node.js if not already installed
 ```
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
