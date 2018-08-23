@@ -79,7 +79,7 @@ Note: If you are having issues with the scrypt folder run the following in the p
 ```
 truffle(develop)> test
 ```
-You should see six tests pass. You can now stop the development environment.
+You should see six tests pass. You can now exit the development environment.
 
 ## Running the Application using the deployed Rinkeby contract
 This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal in the project directory 
