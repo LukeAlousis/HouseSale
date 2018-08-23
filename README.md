@@ -82,11 +82,14 @@ truffle(develop)> test
 You should see six tests pass. You can now exit the development environment.
 
 ## Running the Application using the deployed Rinkeby contract
-This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal in the project directory 
+This contract has been deployed on the Rinkeby Testnet. To interact with the contract make sure your Metamask network is set to Rinkeby.
+
+To start the application run the following command in the terminal in the project directory 
 ```
 npm start
 ```
-To interact with the contract make sure your Metamask network is set to Rinkeby.
+
+A web page should open up and show the interface of the DApp on the Rinkeby network.
 
 ## Starting (Your Own Version) on Local Server
 ### Install ganache-cli if not already installed
@@ -114,4 +117,4 @@ Start the application
 ```
 npm start
 ```
-A web page should open up and show the interface of the DApp.You should still be able to interact with the Rinkeby deployed contract by change the Metamask network to Rinkeby.
+A web page should open up and show the interface of the DApp. You should still be able to interact with the Rinkeby deployed contract by change the Metamask network to Rinkeby.
