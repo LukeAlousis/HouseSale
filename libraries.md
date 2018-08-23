@@ -1,6 +1,6 @@
-#Libraries used
+# Libraries used
 
-##Included the libraries from OpenZepplin called SafeMath and Ownable
+## Included the libraries from OpenZepplin called SafeMath and Ownable
 
 TheSafeMath library prevents over/under vulnerabilities from occurring by utilizing the add, subtract, multiply and divide functions for math operations.
 
