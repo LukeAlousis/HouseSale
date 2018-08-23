@@ -4,7 +4,7 @@
 This application allows sellers to offer "imaginary" houses for sale, buyers to bid on and submit funds on a house and the smart contract performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the blockchain (Rinkeby testnet).
 
 ## Links to Required Documents
-### Design Pattern Requirements
+### Design Pattern Decisions
 https://github.com/LukeAlousis/HouseSale/blob/master/design_pattern_decisions.md
 ### Avoiding Common Attacks
 https://github.com/LukeAlousis/HouseSale/blob/master/avoiding_common_attacks.md
@@ -119,4 +119,4 @@ Start the application
 ```
 npm start
 ```
-A web page should open up and show the interface of the DApp. You should still be able to interact with the Rinkeby deployed contract by change the Metamask network to Rinkeby.
+A web page should open up and show the interface of the DApp. You should still be able to interact with the Rinkeby deployed contract by changing the Metamask network to Rinkeby.
