@@ -24,7 +24,7 @@ contract HouseSale is Pausable {
     uint readyToClose;
 
 
-    //Create a struct of a house
+    //Struct of a house
     struct Home {
         string homeAddress;
         uint id;
@@ -42,7 +42,7 @@ contract HouseSale is Pausable {
         uint[] submittedOfferIds;
 
     }
-    //Create a struct of an offer made on a house
+    //Struct of an offer made on a house
     struct Offer {
         uint houseId;
         uint offerPrice;
@@ -57,10 +57,10 @@ contract HouseSale is Pausable {
 
     }
 
-    //Create a array of all of the houses for sale
+    //Array of all of the houses for sale
     Home[] public houses;
 
-    //Create a array of all of the offers made on a house
+    //Array of all of the offers made on a house
     Offer[] public offers;
 
     //Mappings to keep track of the number of offers, accepted offers or houses
@@ -74,7 +74,7 @@ contract HouseSale is Pausable {
 
 
 
-    //Create enums that tracks the state of the transactions
+    //Enums that tracks the state of the transactions
     enum State {Sold, ForSale, OfferAccepted, ReadyToClose, FailedToClose, Removed}
     enum Funds {DepositMade, FundsRequired, AllFundsSubmitted}
     enum OfferState {Pending, Accepted, ReadyToClose, Pulled, FailedToClose, Complete}
