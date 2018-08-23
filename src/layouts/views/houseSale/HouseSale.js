@@ -269,7 +269,7 @@ class HouseSale extends Component {
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
 
         <h1>Real Estate Offering and Transaction Platform</h1>
-        <p> This application allows sellers to offer houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.</p>
+        <p> This application allows sellers to offer <i>imaginary</i> houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.</p>
         <br />
         <p><strong>Important Note:</strong> This contract uses a closing date to determine when the buyer must submit offers and deal can be closed. This closing date can be used as a <strong>rough estimate only</strong> as timestamps can be manipulated by the miner. It is recommended to submit funds well before the closing date.</p>
         <br />
