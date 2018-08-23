@@ -63,8 +63,7 @@ contract HouseSale is Pausable {
     //Array of all of the offers made on a house
     Offer[] public offers;
 
-    //Mappings to keep track of the number of offers, accepted offers or houses
-    //a user has
+    //Mappings to keep track of the number of offers, accepted offers or houses a user has
     mapping (address => uint) offersMade;
     mapping (address => uint) offersIAccepted;
     mapping (address => uint) housesByUser;
