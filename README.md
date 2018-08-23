@@ -61,38 +61,34 @@ sudo apt-get install -y nodejs
 npm install -g truffle
 ```
 
-### Compile the smart contracts
-Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo. Compile the smart contracts using
-
-```
-> truffle compile
-```
-
-Note: If you are having issues with the scrypt folder run the following in the project directory
-```
-> # npm install scrypt
-```
-
 ## Testing the contract
-Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. To launch the tests, in your terminal, make sure you are in the repo folder and follow the instructions below.
+Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. 
+
+Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo.
 
 ### Enter the Truffle development environment
 ```
 > truffle develop
+```
+Note: If you are having issues with the scrypt folder run the following in the project directory
+```
+> # npm install scrypt
 ```
 
 ### Start the tests
 ```
 truffle(develop)> test
 ```
-You should see six tests pass.
+You should see six tests pass. You can now stop the development environment.
 
 ## Running the Application using the deployed Rinkeby contract
 This contract has been deployed on the Rinkeby Testnet. To start the application run the following command in the terminal in the project directory 
 ```
 npm start
 ```
-## Starting (Your Own Version) on Ganache (Local Testnet)
+To interact with the contract make sure your Metamask network is set to Rinkeby.
+
+## Starting (Your Own Version) on Local Server
 ### Install ganache-cli if not already installed
 ```
 npm install -g ganache-cli
@@ -101,10 +97,9 @@ npm install -g ganache-cli
 ```
 ganache-cli -b 3
 ```
-Copy the seed phrase and access the accounts by entering it into Metamask. 
+Copy the seed phrase and access the accounts by entering the seed phrase into Metamask. 
 
 IMPORTANT! - Make sure, before you deploy the application locally via 'npm start' in your terminal, that your MetaMask is on the 'Localhost 8545' network. Your ether balance should be 100.
-
 
 ### Migrate and Start the Application
 
