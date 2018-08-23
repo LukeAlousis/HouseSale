@@ -1,7 +1,7 @@
 
 # Real Estate Offering and Transaction Platform
 
-This application allows sellers to offer "imaginary" houses for sale, buyers to bid on and submit funds on a house and performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the Ethereum blockchain.
+This application allows sellers to offer "imaginary" houses for sale, buyers to bid on and submit funds on a house and the smart contract performs the final transaction of funds once the closing date has been reached. All of this is done completely and transparently on the blockchain (Rinkeby testnet).
 
 ## Links to Required Documents
 ### Design Pattern Requirements
@@ -10,6 +10,8 @@ https://github.com/LukeAlousis/HouseSale/blob/master/design_pattern_decisions.md
 https://github.com/LukeAlousis/HouseSale/blob/master/avoiding_common_attacks.md
 ### Library Information
 https://github.com/LukeAlousis/HouseSale/blob/master/libraries.md
+### Address of the Smart Contract on Rinkeby
+https://github.com/LukeAlousis/HouseSale/blob/master/deployed_addresses.txt
 ### Link to the Smart Contract
 https://github.com/LukeAlousis/HouseSale/blob/master/contracts/HouseSale.sol
 
