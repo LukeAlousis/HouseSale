@@ -41,7 +41,7 @@ Clone or download the Repo from Git
 
 ### Install Node.js if not already installed
 
-Follow the instrunctions here: https://nodejs.org/en/download/package-manager/ or if on Ubuntu use the following in the terminal
+Follow the instructions here: https://nodejs.org/en/download/package-manager/ or if on Ubuntu use the following in the terminal
 ```
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
