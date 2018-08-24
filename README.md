@@ -63,7 +63,7 @@ sudo apt-get install -y nodejs
 npm install -g truffle
 ```
 
-## Testing the contract
+## Testing the Contract
 Information for the tests can be found at https://github.com/LukeAlousis/HouseSale/blob/master/testing.md. 
 
 Open your terminal and 'cd' (change directory) to the appropriate folder, where you have downloaded and unzipped the repo.
@@ -83,7 +83,7 @@ truffle(develop)> test
 ```
 You should see six tests pass. You can now exit the development environment.
 
-## Running the Application using the deployed Rinkeby contract
+## Running the Application Using the Deployed Rinkeby Contract
 This contract has been deployed on the Rinkeby Testnet. To interact with the contract make sure your Metamask network is set to Rinkeby.
 
 To start the application run the following command in the terminal in the project directory 
@@ -106,7 +106,7 @@ Copy the seed phrase and access the accounts by entering the seed phrase into Me
 
 IMPORTANT! - Make sure, before you deploy the application locally via 'npm start' in your terminal, that your MetaMask is on the 'Localhost 8545' network. Your ether balance should be 100.
 
-### Migrate and Start the Application
+### Migrate and start the application
 
 Open a new terminal window and navigate to the project directory.
 
