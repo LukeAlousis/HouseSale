@@ -70,11 +70,11 @@ Open your terminal and 'cd' (change directory) to the appropriate folder, where 
 
 ### Enter the Truffle development environment
 ```
-> truffle develop
+truffle develop
 ```
 Note: If you are having issues with the scrypt folder run the following in the project directory
 ```
-> # npm install scrypt
+npm install scrypt
 ```
 
 ### Start the tests
