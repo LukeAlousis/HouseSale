@@ -8,8 +8,7 @@ Simple test to make sure the contract has deployed
 2. Make sure only the buyer that put in an offer can pull his offer and receive his deposit back if the offer hasn’t been accepted
 The owner puts a house up for sale for 5 eth. The buyer puts in an offer with a deposit of 1 eth. An account that is not the buyer tries to pull the offer to receive the buyers deposit. If this fails the test continues with the buyer pulling his offer. The buyer then receives the deposit back minus the gas fees.
 
-3. Make sure only the owner of the contract can accept an offer
-Couple offers are made and someone other than the owner tries to accept an offer. If the attempt fails then the test passed.
+3. Make sure only the owner of the contract can accept an offer. A couple offers are made and someone other than the owner tries to accept an offer. If the attempt fails then the test passed.
 
 4. If an offer is accepted make sure anyone else who put in an offer can get their deposit back
 After an offer is accepted the owners of the rejected offers can call returnDeposit to get their money back. This test makes sure that is possible and also ensures only owner of the rejected offer can call returnDeposit.
